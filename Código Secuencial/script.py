@@ -1,5 +1,6 @@
 import os
 import math
+import time
 import numpy as np
 import argparse
 import math
@@ -7,6 +8,7 @@ from src.data import Ocean
 from src.simulation import compute_time
 
 #python3 script.py -3 -1 -1 2 1 1
+#python3 script.py -6 1 4 9 1 1
 
 # Variables globales para la configuración inicial
 VEL_BARCO = 0  # Velocidad predeterminada del barco en m/s
@@ -111,6 +113,8 @@ if __name__ == "__main__":
     # Parsear los argumentos
     args = parser.parse_args()
 
+    inicio = time.time()
+
     # Limitar el oceano
     ocean_data.crop_data([args.lati, args.loni, args.latf, args.lonf])
 
@@ -121,8 +125,8 @@ if __name__ == "__main__":
     RESOLUCION = args.resolucion
 
     # Nombres de los pipes
-    pipe_wd = "pipe_wd"
-    pipe_rd = "pipe_rd"
+    pipe_wd = "/tmp/pipe_wd"
+    pipe_rd = "/tmp/pipe_rd"
 
     # Crear los pipes nombrados si no existen
     if not os.path.exists(pipe_wd):
@@ -152,6 +156,9 @@ if __name__ == "__main__":
                 # Si el comando era "salir", terminar el servidor
                 if continuar:
                     print("Cerrando...")
+                    fin = time.time()
+
+                    print(f"Tiempo de ejecucion: {fin - inicio} segundos")
                     break
 
     finally:
@@ -160,3 +167,5 @@ if __name__ == "__main__":
             os.unlink(pipe_wd)
         if os.path.exists(pipe_rd):
             os.unlink(pipe_rd)
+
+    
